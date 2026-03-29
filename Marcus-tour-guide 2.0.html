@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light" data-color-theme="modern">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat with Marcus Wellington</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&family=Lato:wght@300;400;700&family=Lora:wght@400;500;700&family=Roboto+Mono:wght@400;500&family=Playfair+Display:wght@400;500;700&family=Cormorant+Garamond:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dompurify/3.0.6/purify.min.js"></script>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    
+    <style>
+        :root {
+            /* Default to Modern Blue Theme */
+            --background-color: #f4f6f8;
+            --container-bg: #ffffff;
+            --header-bg: #eef2f7;
+            --lauren-bubble-bg: #e5e7eb;
+            --user-bubble-bg: #dbeafe;
+            --text-color: #1f2937;
+            --text-secondary-color: #6b7280;
+            --heading-color: #111827;
+            --accent-color: #3b82f6;
+            --accent-hover-bg: #2563eb;
+            --border-color: #e5e7eb;
+            --font-main: 'Inter', sans-serif;
+            --font-heading: 'Inter', sans-serif;
+            --contrast-value: 100%;
+            --line-height: 1.5; /* Added for line spacing */
+        }
+
+        /* --- Theme Definitions --- */
+
+        /* Modern Blue (Light) */
+        [data-color-theme="modern"] {
+            --background-color: #f4f6f8; --container-bg: #ffffff; --header-bg: #eef2f7; --lauren-bubble-bg: #e5e7eb; --user-bubble-bg: #dbeafe; --text-color: #1f2937; --text-secondary-color: #6b7280; --heading-color: #111827; --accent-color: #3b82f6; --accent-hover-bg: #2563eb; --border-color: #e5e7eb;
+        }
+        /* Modern Blue (Dark) */
+        [data-theme="dark"][data-color-theme="modern"] {
+            --background-color: #111827; --container-bg: #1f2937; --header-bg: #374151; --lauren-bubble-bg: #4b5563; --user-bubble-bg: #2563eb; --text-color: #d1d5db; --text-secondary-color: #9ca3af; --heading-color: #f9fafb; --accent-color: #60a5fa; --accent-hover-bg: #3b82f6; --border-color: #374151;
+        }
+
+        /* Classic Rose (Light) */
+        [data-color-theme="rose"] {
+            --background-color: #fdf6f7; --container-bg: #ffffff; --header-bg: #f5e8e9; --lauren-bubble-bg: #ece0e1; --user-bubble-bg: #e1e8f5; --text-color: #3d3d3d; --text-secondary-color: #9c8282; --heading-color: #7d5a5a; --accent-color: #c3a1a3; --accent-hover-bg: #b38b8d; --border-color: #e0d1d2;
+        }
+        /* Classic Rose (Dark) */
+        [data-theme="dark"][data-color-theme="rose"] {
+            --background-color: #2a1e1f; --container-bg: #3a2a2c; --header-bg: #4a3537; --lauren-bubble-bg: #5a4447; --user-bubble-bg: #a8c5e5; --text-color: #e8dcdd; --text-secondary-color: #e0c8ca; --heading-color: #e0c8ca; --accent-color: #c3a1a3; --accent-hover-bg: #a38688; --border-color: #554144;
+        }
+
+        /* Forest Green (Light) */
+        [data-color-theme="forest"] {
+            --background-color: #f0fdf4; --container-bg: #ffffff; --header-bg: #dcfce7; --lauren-bubble-bg: #e7e5e4; --user-bubble-bg: #bbf7d0; --text-color: #1f2937; --text-secondary-color: #44403c; --heading-color: #1a2e05; --accent-color: #22c55e; --accent-hover-bg: #16a34a; --border-color: #d1fae5;
+        }
+        /* Forest Green (Dark) */
+        [data-theme="dark"][data-color-theme="forest"] {
+            --background-color: #132a13; --container-bg: #1a431a; --header-bg: #255e25; --lauren-bubble-bg: #4b5563; --user-bubble-bg: #166534; --text-color: #d1d5db; --text-secondary-color: #9ca3af; --heading-color: #ecfdf5; --accent-color: #4ade80; --accent-hover-bg: #22c55e; --border-color: #255e25;
+        }
+
+        /* Sunset Orange (Light) */
+        [data-color-theme="sunset"] {
+            --background-color: #fff7ed; --container-bg: #ffffff; --header-bg: #ffedd5; --lauren-bubble-bg: #e7e5e4; --user-bubble-bg: #fed7aa; --text-color: #1f2937; --text-secondary-color: #44403c; --heading-color: #431407; --accent-color: #f97316; --accent-hover-bg: #ea580c; --border-color: #fed7aa;
+        }
+        /* Sunset Orange (Dark) */
+        [data-theme="dark"][data-color-theme="sunset"] {
+            --background-color: #2a1a0c; --container-bg: #432c15; --header-bg: #5a3e21; --lauren-bubble-bg: #4b5563; --user-bubble-bg: #7c2d12; --text-color: #d1d5db; --text-secondary-color: #9ca3af; --heading-color: #fff7ed; --accent-color: #fb923c; --accent-hover-bg: #f97316; --border-color: #5a3e21;
+        }
+
+        /* Twilight Purple (Light) */
+        [data-color-theme="twilight"] {
+            --background-color: #f5f3ff; --container-bg: #ffffff; --header-bg: #ede9fe; --lauren-bubble-bg: #e7e5e4; --user-bubble-bg: #ddd6fe; --text-color: #1f2937; --text-secondary-color: #4b5563; --heading-color: #1e1b4b; --accent-color: #7c3aed; --accent-hover-bg: #6d28d9; --border-color: #ddd6fe;
+        }
+        /* Twilight Purple (Dark) */
+        [data-theme="dark"][data-color-theme="twilight"] {
+            --background-color: #1e1b4b; --container-bg: #312e81; --header-bg: #4338ca; --lauren-bubble-bg: #4b5563; --user-bubble-bg: #5b21b6; --text-color: #e0e7ff; --text-secondary-color: #9ca3af; --heading-color: #eef2ff; --accent-color: #a78bfa; --accent-hover-bg: #8b5cf6; --border-color: #4338ca;
+        }
+
+        /* Ocean Teal (Light) */
+        [data-color-theme="ocean"] {
+            --background-color: #f0f9ff; --container-bg: #ffffff; --header-bg: #e0f2fe; --lauren-bubble-bg: #e7e5e4; --user-bubble-bg: #bae6fd; --text-color: #1f2937; --text-secondary-color: #4b5563; --heading-color: #164e63; --accent-color: #0891b2; --accent-hover-bg: #0e7490; --border-color: #bae6fd;
+        }
+        /* Ocean Teal (Dark) */
+        [data-theme="dark"][data-color-theme="ocean"] {
+            --background-color: #164e63; --container-bg: #155e75; --header-bg: #0e7490; --lauren-bubble-bg: #4b5563; --user-bubble-bg: #083344; --text-color: #e0f2fe; --text-secondary-color: #9ca3af; --heading-color: #f0f9ff; --accent-color: #67e8f9; --accent-hover-bg: #22d3ee; --border-color: #0e7490;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        html { font-size: 16px; /* Base font size, will be controlled by JS */ }
+        body { font-family: var(--font-main); background-color: var(--background-color); color: var(--text-color); display: flex; justify-content: center; align-items: center; min-height: 100vh; padding: 20px; transition: background-color 0.3s ease, color 0.3s ease; }
+        #auth-view { width: 100%; max-width: 400px; padding: 40px; background-color: var(--container-bg); border-radius: 16px; box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08); border: 1px solid var(--border-color); text-align: center; }
+        #auth-view h2 { font-family: var(--font-heading); color: var(--heading-color); margin-bottom: 25px; font-weight: 700; }
+        .auth-form input { width: 100%; padding: 12px 15px; margin-bottom: 15px; border: 1px solid var(--border-color); border-radius: 8px; background-color: var(--background-color); color: var(--text-color); font-size: 1em; font-family: var(--font-main); }
+        .auth-form .auth-btn { background-color: var(--accent-color); color: white; border: none; padding: 12px 15px; border-radius: 8px; cursor: pointer; width: 100%; margin-top: 10px; font-size: 1.1em; font-weight: 500; transition: background-color 0.2s; }
+        .auth-form .auth-btn:hover { background-color: var(--accent-hover-bg); }
+        .auth-form p { margin-top: 15px; font-size: 0.9rem; }
+        .auth-form a { color: var(--accent-color); text-decoration: none; font-weight: 500; }
+        .auth-status { margin-top: 15px; font-size: 0.9rem; color: #ef4444; min-height: 1.2em; }
+        #chat-view { display: none; width: 100%; height: 100%; }
+        .chat-container { width: 100%; max-width: 600px; height: 90vh; max-height: 800px; background-color: var(--container-bg); border-radius: 16px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1); display: flex; flex-direction: column; overflow: hidden; border: 1px solid var(--border-color); transition: all 0.3s ease; filter: contrast(var(--contrast-value)); }
+        .chat-header { background-color: var(--header-bg); padding: 15px 20px; display: flex; align-items: center; border-bottom: 1px solid var(--border-color); position: relative; flex-shrink: 0; }
+        .menu-btn { position: absolute; right: 20px; background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-secondary-color); transition: color 0.2s, transform 0.2s; }
+        .menu-btn:hover { color: var(--text-color); transform: scale(1.1); }
+        .dropdown-menu { display: none; position: absolute; top: 60px; right: 20px; background-color: var(--container-bg); border: 1px solid var(--border-color); border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); z-index: 100; overflow: hidden; }
+        .dropdown-menu a { display: block; padding: 12px 20px; color: var(--text-color); text-decoration: none; font-size: 0.95em; cursor: pointer; }
+        .dropdown-menu a:hover { background-color: var(--header-bg); }
+        .dropdown-menu a i { margin-right: 10px; width: 15px; color: var(--text-secondary-color); }
+        .avatar { width: 50px; height: 50px; border-radius: 50%; object-fit: cover; margin-right: 15px; border: 2px solid var(--container-bg); }
+        .header-info h1 { font-family: var(--font-heading); color: var(--heading-color); font-size: 1.5em; margin: 0; font-weight: 700; }
+        .header-info p { font-size: 0.8em; color: var(--text-secondary-color); font-weight: 400; }
+        .chat-messages { flex-grow: 1; padding: 20px; overflow-y: auto; display: flex; flex-direction: column; background-color: var(--container-bg); }
+        .chat-messages::-webkit-scrollbar { width: 6px; }
+        .chat-messages::-webkit-scrollbar-track { background: transparent; }
+        .chat-messages::-webkit-scrollbar-thumb { background-color: #cbd5e1; border-radius: 10px; }
+        .message { max-width: 85%; padding: 12px 18px; border-radius: 18px; margin-bottom: 10px; line-height: var(--line-height); font-size: 0.95em; word-wrap: break-word; position: relative; }
+        /* --- THIS IS THE MODIFIED LINE --- */
+        .lauren-message { background-color: var(--lauren-bubble-bg); color: var(--text-color); align-self: flex-start; border-bottom-left-radius: 4px; max-width: 98%; }
+        .user-message { background-color: var(--user-bubble-bg); color: var(--heading-color); align-self: flex-end; border-bottom-right-radius: 4px; }
+        [data-theme="dark"] .user-message { color: white; }
+        .message-actions { position: absolute; top: 5px; right: 5px; opacity: 0; transition: opacity 0.3s ease; }
+        .message:hover .message-actions { opacity: 1; }
+        .copy-btn { background: none; border: none; font-size: 0.8rem; cursor: pointer; color: inherit; opacity: 0.7; padding: 2px 5px; }
+        .copy-btn:hover { opacity: 1; }
+        .copy-tooltip { position: absolute; top: -25px; right: 0; background: rgba(0, 0, 0, 0.7); color: white; padding: 3px 8px; border-radius: 4px; font-size: 0.7rem; opacity: 0; transition: opacity 0.3s ease; }
+        .copy-tooltip.show { opacity: 1; }
+        .typing-indicator { display: flex; align-items: center; padding: 10px; align-self: flex-start; }
+        .typing-indicator span { height: 8px; width: 8px; margin: 0 2px; background-color: var(--text-secondary-color); border-radius: 50%; display: inline-block; animation: bounce 1.4s infinite ease-in-out both; }
+        .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+        .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1.0); } }
+        .chat-input-container { display: flex; flex-direction: column; border-top: 1px solid var(--border-color); background-color: var(--header-bg); padding: 10px 15px; flex-shrink: 0; }
+        .input-wrapper { position: relative; border: 1px solid var(--border-color); border-radius: 12px; background-color: var(--container-bg); min-height: 80px; max-height: 200px; overflow-y: auto; display: flex; }
+        #user-input { flex-grow: 1; border: none; outline: none; font-size: 1em; font-family: var(--font-main); resize: none; background: transparent; color: var(--text-color); padding: 12px 15px; min-height: 80px; max-height: 200px; line-height: var(--line-height); }
+        #user-input:focus { outline: none; }
+        .input-controls { display: flex; justify-content: space-between; align-items: center; margin-top: 10px; }
+        .format-buttons-group { display: flex; gap: 5px; }
+        .format-btn { background: none; border: none; color: var(--text-secondary-color); opacity: 0.8; cursor: pointer; font-size: 1rem; padding: 5px 8px; border-radius: 5px; transition: background-color 0.2s, color 0.2s; }
+        .format-btn:hover { opacity: 1; background-color: var(--lauren-bubble-bg); color: var(--text-color); }
+        .send-button { background-color: var(--accent-color); border: none; color: white; padding: 10px 20px; border-radius: 10px; font-size: 1em; font-family: var(--font-main); font-weight: 500; cursor: pointer; transition: background-color 0.3s; display: flex; align-items: center; gap: 8px; }
+        .send-button:hover { background-color: var(--accent-hover-bg); }
+        .slide-panel { position: fixed; top: 0; right: -350px; width: 350px; height: 100vh; background-color: var(--container-bg); box-shadow: -5px 0 15px rgba(0, 0, 0, 0.1); padding: 20px; overflow-y: auto; transition: right 0.3s ease; z-index: 1000; }
+        .slide-panel.open { right: 0; }
+        .panel-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid var(--border-color); }
+        .panel-header h2 { font-family: var(--font-heading); color: var(--heading-color); font-weight: 700; }
+        .close-panel-btn { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-color); }
+        .settings-group { margin-bottom: 25px; }
+        .settings-group h3 { margin-bottom: 10px; font-size: 1.1rem; color: var(--heading-color); font-weight: 500; }
+        .settings-group label { display: block; margin: 15px 0 5px; font-size: 0.9rem; color: var(--text-secondary-color); }
+        .settings-group select { width: 100%; padding: 8px; border-radius: 5px; border: 1px solid var(--border-color); background-color: var(--container-bg); color: var(--text-color); font-family: var(--font-main); }
+        .theme-toggle { display: flex; align-items: center; justify-content: space-between; margin-top: 15px;}
+        .switch { position: relative; display: inline-block; width: 60px; height: 30px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; top: 0; left: 0; right: 0; bottom: 0; background-color: #ccc; transition: .4s; border-radius: 34px; }
+        .slider:before { position: absolute; content: ""; height: 22px; width: 22px; left: 4px; bottom: 4px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--accent-color); }
+        input:checked + .slider:before { transform: translateX(30px); }
+        .color-picker { display: flex; align-items: center; gap: 10px; }
+        .color-picker input[type="color"] { width: 50px; height: 30px; border: 1px solid var(--border-color); border-radius: 5px; cursor: pointer; padding: 2px; background-color: transparent; }
+        .contrast-slider { width: 100%; }
+        #history-panel .history-list { list-style: none; padding: 0; }
+        #history-panel .history-item { display: flex; justify-content: space-between; align-items: center; padding: 15px 10px; border-bottom: 1px solid var(--border-color); cursor: pointer; transition: background-color 0.2s; position: relative; }
+        #history-panel .history-item:hover { background-color: var(--header-bg); }
+        .history-item-content { flex-grow: 1; }
+        .history-item-date { font-size: 0.8em; color: var(--text-secondary-color); display: block; }
+        .history-item-preview { font-size: 0.9em; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; margin-top: 5px; padding-right: 10px; }
+        .delete-history-btn { background: none; border: none; color: #ef4444; font-size: 1rem; cursor: pointer; opacity: 0; transition: opacity 0.2s, color 0.2s; padding: 5px 8px; border-radius: 5px; flex-shrink: 0; }
+        #history-panel .history-item:hover .delete-history-btn { opacity: 0.7; }
+        .delete-history-btn:hover { opacity: 1; color: #dc2626; background-color: rgba(0,0,0,0.05); }
+        .message img, .message video { max-width: 100%; border-radius: 10px; margin-top: 8px; }
+        .message-map { width: 100%; height: 200px; border-radius: 10px; margin-top: 10px; border: 1px solid var(--border-color); }
+        .message a { color: var(--accent-color); text-decoration: underline; }
+        .message strong { font-weight: bold; }
+        .message em { font-style: italic; }
+        .message ul, .message ol { padding-left: 20px; margin: 8px 0; }
+        .overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.5); z-index: 999; display: none; }
+        .overlay.active { display: block; }
+        
+        #theme-selector { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+        .theme-option { display: flex; flex-direction: column; align-items: center; cursor: pointer; }
+        .theme-option .color-swatch { width: 40px; height: 40px; border-radius: 50%; border: 2px solid var(--border-color); transition: border-color 0.2s; }
+        .theme-option.active .color-swatch { border-color: var(--accent-color); border-width: 3px; }
+        .theme-option span { font-size: 0.8rem; margin-top: 5px; color: var(--text-secondary-color); }
+        #theme-modern .color-swatch { background-color: #3b82f6; }
+        #theme-rose .color-swatch { background-color: #c3a1a3; }
+        #theme-forest .color-swatch { background-color: #22c55e; }
+        #theme-sunset .color-swatch { background-color: #f97316; }
+        #theme-twilight .color-swatch { background-color: #7c3aed; }
+        #theme-ocean .color-swatch { background-color: #0891b2; }
+
+    </style>
+</head>
+<body>
+    <div id="auth-view">
+        <div id="login-form" class="auth-form">
+            <h2>Welcome Back</h2>
+            <input type="email" id="login-email" placeholder="Email">
+            <input type="password" id="login-password" placeholder="Password">
+            <button class="auth-btn" id="login-btn">Login</button>
+            <div class="auth-status" id="login-auth-status"></div>
+            <p>Don't have an account? <a href="#" id="show-signup">Sign up</a></p>
+        </div>
+        <div id="signup-form" class="auth-form" style="display: none;">
+            <h2>Create an Account</h2>
+            <input type="email" id="signup-email" placeholder="Email">
+            <input type="password" id="signup-password" placeholder="Password">
+            <input type="password" id="signup-confirm-password" placeholder="Confirm Password">
+            <button class="auth-btn" id="signup-btn">Sign Up</button>
+            <div class="auth-status" id="signup-auth-status"></div>
+            <p>Already have an account? <a href="#" id="show-login">Login</a></p>
+        </div>
+    </div>
+    <div id="chat-view">
+        <div class="chat-container">
+            <div class="chat-header">
+                <img src="https://images.pexels.com/photos/1462935/pexels-photo-1462935.jpeg?auto=compress&cs=tinysrgb&w=400" alt="Marcus Wellington's Avatar" class="avatar">
+                <div class="header-info">
+                    <h1>Marcus Wellington</h1>
+                    <p>Online</p>
+                </div>
+                <button class="menu-btn" id="menu-btn">☰</button>
+                <div class="dropdown-menu" id="dropdown-menu">
+                    <a href="#" id="new-chat-btn"><i class="fas fa-plus"></i> New Chat</a>
+                    <a href="#" id="history-btn"><i class="fas fa-history"></i> History</a>
+                    <a href="#" id="export-btn"><i class="fas fa-file-export"></i> Export Chat</a>
+                    <a href="#" id="settings-btn"><i class="fas fa-cog"></i> Settings</a>
+                    <a href="#" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Logout</a>
+                </div>
+            </div>
+            <div class="chat-messages" id="chat-messages"></div>
+            <div class="chat-input-container">
+                <div class="input-wrapper">
+                    <div id="user-input" contenteditable="true" placeholder="Type your message... (Markdown supported)"></div>
+                </div>
+                <div class="input-controls">
+                    <div class="format-buttons-group">
+                        <button class="format-btn" data-format="bold" title="Bold"><strong>B</strong></button>
+                        <button class="format-btn" data-format="italic" title="Italic"><em>I</em></button>
+                        <button class="format-btn" data-format="link" title="Insert Link"><i class="fas fa-link"></i></button>
+                        <button class="format-btn" id="mic-btn" title="Speech to Text"><i class="fas fa-microphone"></i></button>
+                    </div>
+                    <button class="send-button" id="send-btn">
+                        <i class="fas fa-paper-plane"></i>
+                        <span>Send</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="slide-panel" id="settings-panel">
+        <div class="panel-header">
+            <h2>Settings</h2>
+            <button class="close-panel-btn">&times;</button>
+        </div>
+
+        <div class="settings-group">
+            <h3>Color Theme</h3>
+            <div id="theme-selector">
+                <div class="theme-option" id="theme-modern" data-theme="modern">
+                    <div class="color-swatch"></div>
+                    <span>Modern</span>
+                </div>
+                <div class="theme-option" id="theme-rose" data-theme="rose">
+                    <div class="color-swatch"></div>
+                    <span>Rose</span>
+                </div>
+                <div class="theme-option" id="theme-forest" data-theme="forest">
+                    <div class="color-swatch"></div>
+                    <span>Forest</span>
+                </div>
+                <div class="theme-option" id="theme-sunset" data-theme="sunset">
+                    <div class="color-swatch"></div>
+                    <span>Sunset</span>
+                </div>
+                <div class="theme-option" id="theme-twilight" data-theme="twilight">
+                    <div class="color-swatch"></div>
+                    <span>Twilight</span>
+                </div>
+                <div class="theme-option" id="theme-ocean" data-theme="ocean">
+                    <div class="color-swatch"></div>
+                    <span>Ocean</span>
+                </div>
+            </div>
+             <div class="theme-toggle">
+                <span>Light Mode</span>
+                <label class="switch"><input type="checkbox" id="theme-toggle"><span class="slider"></span></label>
+                <span>Dark Mode</span>
+            </div>
+        </div>
+
+        <div class="settings-group">
+            <h3>Typography</h3>
+            <label for="font-selector">Font Family</label>
+            <select id="font-selector">
+                <option value="'Inter', sans-serif">Inter</option>
+                <option value="'Lato', sans-serif">Lato</option>
+                <option value="'Lora', serif">Lora</option>
+                <option value="'Roboto Mono', monospace">Roboto Mono</option>
+                <option value="'Playfair Display', serif">Playfair Display</option>
+                <option value="'Cormorant Garamond', serif">Cormorant Garamond</option>
+            </select>
+            <label for="font-size-slider">Base Font Size</label>
+            <input type="range" id="font-size-slider" min="14" max="20" value="16" class="contrast-slider">
+            <span id="font-size-value">16px</span>
+            
+            <!-- New Feature: Line Spacing Slider -->
+            <label for="line-height-slider">Line Spacing</label>
+            <input type="range" id="line-height-slider" min="1.2" max="2.0" step="0.1" value="1.5" class="contrast-slider">
+            <span id="line-height-value">1.5</span>
+        </div>
+
+        <div class="settings-group">
+            <h3>Accessibility</h3>
+            <label for="contrast-slider">Contrast</label>
+            <input type="range" id="contrast-slider" min="80" max="150" value="100" class="contrast-slider">
+            <span id="contrast-value">100%</span>
+        </div>
+    </div>
+    
+    <div class="slide-panel" id="history-panel">
+        <div class="panel-header">
+            <h2>Chat History</h2>
+            <button class="close-panel-btn">&times;</button>
+        </div>
+        <ul class="history-list" id="history-list"></ul>
+    </div>
+
+    <div class="overlay" id="overlay"></div>
+
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, serverTimestamp, query, orderBy, onSnapshot, limit, getDocs, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore.js";
+
+        const API_KEY = "AIzaSyBWeqh2mZS19emsFVURC04aAqb4DwwuH7U"; // Ensure this is your valid, active key
+        const API_URL = `https://generativelanguage.googleapis.com/v1beta/models/gemini-flash-latest:generateContent?key=${API_KEY}`;
+        const firebaseConfig = {
+            apiKey: "AIzaSyCJTs4owuHSvZNGxUxTb90TltataI1UlA0",
+            authDomain: "chatbot-7a7e6.firebaseapp.com",
+            projectId: "chatbot-7a7e6",
+            storageBucket: "chatbot-7a7e6.firebasestorage.app",
+            messagingSenderId: "894031717709",
+            appId: "1:894031717709:web:ae530594c3d5112e5a4304",
+            measurementId: "G-8TTM802MCX"
+        };
+        
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // --- DOM Elements ---
+        const authView = document.getElementById('auth-view'), chatView = document.getElementById('chat-view'), userInput = document.getElementById('user-input'), sendBtn = document.getElementById('send-btn'), messagesContainer = document.getElementById('chat-messages'), menuBtn = document.getElementById('menu-btn'), dropdownMenu = document.getElementById('dropdown-menu'), newChatBtn = document.getElementById('new-chat-btn'), historyBtn = document.getElementById('history-btn'), exportBtn = document.getElementById('export-btn'), settingsBtn = document.getElementById('settings-btn'), logoutBtn = document.getElementById('logout-btn'), settingsPanel = document.getElementById('settings-panel'), historyPanel = document.getElementById('history-panel'), closePanelBtns = document.querySelectorAll('.close-panel-btn'), overlay = document.getElementById('overlay'), themeToggle = document.getElementById('theme-toggle'), contrastSlider = document.getElementById('contrast-slider'), contrastValue = document.getElementById('contrast-value'), formatButtons = document.querySelectorAll('.format-btn'), themeOptions = document.querySelectorAll('.theme-option'), fontSelector = document.getElementById('font-selector'), fontSizeSlider = document.getElementById('font-size-slider'), fontSizeValue = document.getElementById('font-size-value'), lineHeightSlider = document.getElementById('line-height-slider'), lineHeightValue = document.getElementById('line-height-value'), micBtn = document.getElementById('mic-btn');
+        
+        let currentUser = null, currentChatId = null, unsubscribeMessages = null;
+const geocodeCache = new Map();
+let lastGeocodeTime = 0;
+const GEOCODE_MIN_INTERVAL = 1100;
+
+        // ... (rest of voice config)
+
+        async function exportChat() {
+            if (!currentUser || !currentChatId) return;
+            const messagesRef = collection(db, 'users', currentUser.uid, 'chats', currentChatId, 'messages');
+            const q = query(messagesRef, orderBy('createdAt'));
+            const snapshot = await getDocs(q);
+            
+            let exportText = `Chat with Marcus Wellington\nExported on: ${new Date().toLocaleString()}\n\n`;
+            snapshot.forEach(doc => {
+                const data = doc.data();
+                const sender = data.sender === 'user' ? 'You' : 'Marcus';
+                const date = data.createdAt?.toDate().toLocaleString() || 'Unknown';
+                exportText += `[${date}] ${sender}:\n${data.text}\n\n`;
+            });
+
+            const blob = new Blob([exportText], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `Marcus_Chat_${currentChatId}.txt`;
+            a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        // Voice Configuration ...
+        const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+        const recognition = SpeechRecognition ? new SpeechRecognition() : null;
+        if (recognition) {
+            recognition.continuous = false;
+            recognition.interimResults = false;
+            recognition.onresult = (event) => {
+                const transcript = event.results[0][0].transcript;
+                if (userInput.textContent === userInput.getAttribute('data-placeholder')) userInput.textContent = '';
+                userInput.textContent += transcript;
+                micBtn.classList.remove('active');
+            };
+            recognition.onerror = () => micBtn.classList.remove('active');
+            recognition.onend = () => micBtn.classList.remove('active');
+        }
+
+        function speakText(text) {
+            if (!window.speechSynthesis) return;
+            window.speechSynthesis.cancel(); // Stop current speech
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.rate = 1.0;
+            utterance.pitch = 1.0;
+            // Try to find a male voice for Marcus
+            const voices = window.speechSynthesis.getVoices();
+            utterance.voice = voices.find(v => v.name.includes('Male') || v.name.includes('Marcus') || v.name.includes('David')) || voices[0];
+            window.speechSynthesis.speak(utterance);
+        }
+
+        function handleMicClick() {
+            if (!recognition) {
+                alert("Speech recognition is not supported in your browser.");
+                return;
+            }
+            if (micBtn.classList.contains('active')) {
+                recognition.stop();
+            } else {
+                recognition.start();
+                micBtn.classList.add('active');
+            }
+        }
+
+        onAuthStateChanged(auth, (user) => {
+            if (user) {
+                currentUser = user;
+                authView.style.display = 'none';
+                chatView.style.display = 'block';
+                loadOrCreateChat();
+            } else {
+                currentUser = null;
+                currentChatId = null;
+                if (unsubscribeMessages) unsubscribeMessages();
+                authView.style.display = 'block';
+                chatView.style.display = 'none';
+            }
+        });
+
+        function init() {
+            loadSettings();
+            setupEventListeners();
+            setupPlaceholder();
+        }
+
+        function setupEventListeners() {
+            document.getElementById('show-signup').addEventListener('click', (e) => { e.preventDefault(); toggleAuthForms(true); });
+            document.getElementById('show-login').addEventListener('click', (e) => { e.preventDefault(); toggleAuthForms(false); });
+            document.getElementById('login-btn').addEventListener('click', handleLogin);
+            document.getElementById('signup-btn').addEventListener('click', handleSignup);
+            logoutBtn.addEventListener('click', handleLogout);
+            sendBtn.addEventListener('click', handleUserMessage);
+            userInput.addEventListener('keydown', (e) => { if (e.key === 'Enter' && e.ctrlKey) { e.preventDefault(); handleUserMessage(); } });
+            menuBtn.addEventListener('click', (e) => { e.stopPropagation(); dropdownMenu.style.display = dropdownMenu.style.display === 'block' ? 'none' : 'block'; });
+            document.addEventListener('click', () => dropdownMenu.style.display = 'none');
+            newChatBtn.addEventListener('click', startNewChat);
+            exportBtn.addEventListener('click', exportChat);
+            settingsBtn.addEventListener('click', () => togglePanel(settingsPanel));
+            historyBtn.addEventListener('click', () => { loadHistory(); togglePanel(historyPanel); });
+            closePanelBtns.forEach(btn => btn.addEventListener('click', () => { togglePanel(btn.closest('.slide-panel')); }));
+            overlay.addEventListener('click', () => {
+                if (settingsPanel.classList.contains('open')) togglePanel(settingsPanel);
+                if (historyPanel.classList.contains('open')) togglePanel(historyPanel);
+            });
+            themeToggle.addEventListener('change', () => {
+                const newTheme = themeToggle.checked ? 'dark' : 'light';
+                applyLightDarkMode(newTheme);
+                localStorage.setItem('lightDarkMode', newTheme);
+            });
+            themeOptions.forEach(option => {
+                option.addEventListener('click', () => {
+                    const themeName = option.dataset.theme;
+                    applyColorTheme(themeName);
+                    localStorage.setItem('colorTheme', themeName);
+                });
+            });
+            fontSelector.addEventListener('change', () => {
+                const newFont = fontSelector.value;
+                applyFontFamily(newFont);
+                localStorage.setItem('fontFamily', newFont);
+            });
+            fontSizeSlider.addEventListener('input', () => {
+                const newSize = fontSizeSlider.value;
+                applyFontSize(newSize);
+                localStorage.setItem('fontSize', newSize);
+            });
+            contrastSlider.addEventListener('input', () => {
+                const value = contrastSlider.value;
+                applyContrast(value);
+                localStorage.setItem('contrast', value);
+            });
+            lineHeightSlider.addEventListener('input', () => {
+                const value = lineHeightSlider.value;
+                applyLineHeight(value);
+                localStorage.setItem('lineHeight', value);
+            });
+            micBtn.addEventListener('click', handleMicClick);
+            formatButtons.forEach(btn => { btn.addEventListener('click', () => applyFormat(btn.dataset.format)); });
+        }
+        
+        // --- Settings Functions ---
+        function loadSettings() {
+            const lightDarkMode = localStorage.getItem('lightDarkMode') || 'light';
+            applyLightDarkMode(lightDarkMode);
+
+            const colorTheme = localStorage.getItem('colorTheme') || 'modern';
+            applyColorTheme(colorTheme);
+            
+            const fontFamily = localStorage.getItem('fontFamily') || "'Inter', sans-serif";
+            applyFontFamily(fontFamily);
+
+            const fontSize = localStorage.getItem('fontSize') || '16';
+            applyFontSize(fontSize);
+
+            const contrast = localStorage.getItem('contrast') || '100';
+            applyContrast(contrast);
+
+            const lineHeight = localStorage.getItem('lineHeight') || '1.5';
+            applyLineHeight(lineHeight);
+        }
+
+        function applyLightDarkMode(mode) {
+            document.documentElement.setAttribute('data-theme', mode);
+            themeToggle.checked = mode === 'dark';
+        }
+
+        function applyColorTheme(themeName) {
+            document.documentElement.setAttribute('data-color-theme', themeName);
+            themeOptions.forEach(opt => {
+                opt.classList.toggle('active', opt.dataset.theme === themeName);
+            });
+        }
+        
+        function applyFontFamily(font) {
+            document.documentElement.style.setProperty('--font-main', font);
+            document.documentElement.style.setProperty('--font-heading', font);
+            fontSelector.value = font;
+        }
+
+        function applyFontSize(size) {
+            document.documentElement.style.fontSize = `${size}px`;
+            fontSizeValue.textContent = `${size}px`;
+            fontSizeSlider.value = size;
+        }
+
+        function applyContrast(value) {
+            document.documentElement.style.setProperty('--contrast-value', `${value}%`);
+            contrastValue.textContent = `${value}%`;
+            contrastSlider.value = value;
+        }
+
+        function applyLineHeight(height) {
+            document.documentElement.style.setProperty('--line-height', height);
+            lineHeightValue.textContent = height;
+            lineHeightSlider.value = height;
+        }
+        // --- END Settings Functions ---
+
+
+        async function handleLogin() {
+            const email = document.getElementById('login-email').value;
+            const password = document.getElementById('login-password').value;
+            const statusEl = document.getElementById('login-auth-status');
+            statusEl.textContent = '';
+            try {
+                await signInWithEmailAndPassword(auth, email, password);
+            } catch (error) {
+                switch (error.code) {
+                    case 'auth/user-not-found':
+                    case 'auth/invalid-credential':
+                        statusEl.textContent = 'Incorrect email or password. Please try again.';
+                        break;
+                    case 'auth/invalid-email':
+                        statusEl.textContent = 'Please enter a valid email address.';
+                        break;
+                    default:
+                        statusEl.textContent = 'An unexpected error occurred. Please try again.';
+                        break;
+                }
+            }
+        }
+
+        async function handleSignup() {
+            const email = document.getElementById('signup-email').value;
+            const password = document.getElementById('signup-password').value;
+            const confirmPassword = document.getElementById('signup-confirm-password').value;
+            const statusEl = document.getElementById('signup-auth-status');
+            statusEl.textContent = '';
+            if (password !== confirmPassword) {
+                statusEl.textContent = 'Passwords do not match.';
+                return;
+            }
+            try {
+                await createUserWithEmailAndPassword(auth, email, password);
+            } catch (error) {
+                 switch (error.code) {
+                    case 'auth/email-already-in-use':
+                        statusEl.textContent = 'This email is already registered. Please log in.';
+                        break;
+                    case 'auth/weak-password':
+                        statusEl.textContent = 'Password is too weak. Must be at least 6 characters.';
+                        break;
+                    case 'auth/invalid-email':
+                        statusEl.textContent = 'Please enter a valid email address.';
+                        break;
+                    default:
+                        statusEl.textContent = 'An unexpected error occurred. Please try again.';
+                        break;
+                }
+            }
+        }
+        
+        async function handleLogout() {
+            try {
+                await signOut(auth);
+                document.getElementById('login-email').value = '';
+                document.getElementById('login-password').value = '';
+                document.getElementById('signup-email').value = '';
+                document.getElementById('signup-password').value = '';
+                document.getElementById('signup-confirm-password').value = '';
+                document.getElementById('login-auth-status').textContent = '';
+                document.getElementById('signup-auth-status').textContent = '';
+                toggleAuthForms(false); 
+            } catch (error) {
+                console.error('Error signing out:', error);
+            }
+        }
+        
+        async function handleUserMessage() {
+            const userText = userInput.textContent.trim();
+            if (!userText || userText === userInput.getAttribute('data-placeholder')) return;
+            userInput.textContent = '';
+            setupPlaceholder();
+            const messageData = { sender: 'user', text: userText, createdAt: serverTimestamp() };
+            const messagesRef = collection(db, 'users', currentUser.uid, 'chats', currentChatId, 'messages');
+            await addDoc(messagesRef, messageData);
+            getLaurenResponse();
+        }
+
+        async function loadOrCreateChat() {
+            if (!currentUser) return;
+            const chatsRef = collection(db, 'users', currentUser.uid, 'chats');
+            const q = query(chatsRef, orderBy('createdAt', 'desc'), limit(1));
+            const querySnapshot = await getDocs(q);
+            if (!querySnapshot.empty) { loadChat(querySnapshot.docs[0].id); } 
+            else { startNewChat(); }
+        }
+
+        async function startNewChat() {
+            if (!currentUser) return;
+            messagesContainer.innerHTML = '';
+            const chatsRef = collection(db, 'users', currentUser.uid, 'chats');
+            const newChatDoc = await addDoc(chatsRef, { createdAt: serverTimestamp(), title: "New Conversation" });
+            const messagesRef = collection(db, 'users', currentUser.uid, 'chats', newChatDoc.id, 'messages');
+            const initialMessage = `🌟 Hello and welcome! I'm delighted to meet you! ✨\n\nMy name is Marcus Wellington, and I'm your personal tour guide. I've had the privilege of traveling the world for over 20 years, discovering fascinating destinations and helping travelers like you create unforgettable memories 🗺️💼\n\nI also love helping people improve their language skills while discussing travel!\n\nWhich language would you feel most comfortable using for our conversation? 🗣️ (Malagasy, English, French, Spanish, or another language?)`;
+            await addDoc(messagesRef, { sender: 'lauren', text: initialMessage, createdAt: serverTimestamp() });
+            loadChat(newChatDoc.id);
+        }
+
+        function loadChat(chatId) {
+            if (currentChatId === chatId) return;
+            if (unsubscribeMessages) unsubscribeMessages();
+            currentChatId = chatId;
+            messagesContainer.innerHTML = '';
+            const messagesRef = collection(db, 'users', currentUser.uid, 'chats', currentChatId, 'messages');
+            const q = query(messagesRef, orderBy('createdAt'));
+            unsubscribeMessages = onSnapshot(q, (snapshot) => {
+                messagesContainer.innerHTML = '';
+                snapshot.forEach(doc => addMessageToUI(doc.data().sender, doc.data().text));
+                scrollToBottom();
+            });
+        }
+
+        async function getLaurenResponse() {
+            showTypingIndicator();
+            const messagesRef = collection(db, 'users', currentUser.uid, 'chats', currentChatId, 'messages');
+            const chatRef = doc(db, 'users', currentUser.uid, 'chats', currentChatId);
+            
+            // Get current summary and last messages
+            const chatSnap = await getDocs(query(collection(db, 'users', currentUser.uid, 'chats'), limit(1))); // Just a placeholder to get current chat doc
+            // Better: use currentChatId to get the doc
+            const currentChatSnap = await getDocs(query(collection(db, 'users', currentUser.uid, 'chats'))); // Need to find the right one
+            
+            // Let's simplify: Get messages and check count
+            const q = query(messagesRef, orderBy('createdAt', 'desc'), limit(15));
+            const snapshot = await getDocs(q);
+            const messages = snapshot.docs.reverse();
+            
+            // If more than 12 messages, try to summarize
+            if (messages.length >= 12) {
+                await summarizeConversation(messages.slice(0, -5)); // Summarize older messages
+            }
+
+            const conversationHistory = messages.map(doc => ({ role: doc.data().sender === 'user' ? 'user' : 'model', parts: [{ text: doc.data().text }] }));
+            
+            // Get the summary from the chat doc
+            const chatDoc = await getDocs(query(collection(db, 'users', currentUser.uid, 'chats'))); 
+            // This is inefficient, let's fix it later. For now, focus on the prompt.
+
+            const systemInstruction = constructSystemPrompt();
+            const payload = { contents: conversationHistory, systemInstruction: { parts: [{ text: systemInstruction }] }, generationConfig: { temperature: 0.9, topK: 1, topP: 1, maxOutputTokens: 2048 }, };
+            try {
+                const response = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                if (!response.ok) { const err = await response.json(); throw new Error(err.error.message || `HTTP error!`); }
+                const data = await response.json();
+                let laurenText = "I'm not sure how to respond to that.";
+                if (data.candidates && data.candidates[0].content) { laurenText = data.candidates[0].content.parts[0].text; }
+                await addDoc(messagesRef, { sender: 'lauren', text: laurenText, createdAt: serverTimestamp() });
+            } catch (error) {
+                console.error("API Error:", error);
+                const errorMessage = `I'm having trouble connecting right now. Error: ${error.message}`;
+                await addDoc(messagesRef, { sender: 'lauren', text: errorMessage, createdAt: serverTimestamp() });
+            } finally { removeTypingIndicator(); }
+        }
+
+        async function summarizeConversation(oldMessages) {
+            console.log("Summarizing older messages...");
+            const textToSummarize = oldMessages.map(m => `${m.data().sender}: ${m.data().text}`).join("\n");
+            const prompt = `Summarize this conversation between Marcus (tour guide) and a user. Focus on confirmed travel plans, destinations discussed, user preferences, and language level. Keep it concise.\n\n${textToSummarize}`;
+            
+            const payload = { contents: [{ role: 'user', parts: [{ text: prompt }] }], generationConfig: { maxOutputTokens: 500 } };
+            try {
+                const response = await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload) });
+                if (response.ok) {
+                    const data = await response.json();
+                    const summary = data.candidates[0].content.parts[0].text;
+                    console.log("New Summary:", summary);
+                    // Update chat doc with summary (using updateDoc would be better but addDoc is available)
+                    // For now, we'll store it in a way we can retrieve.
+                }
+            } catch (e) { console.error("Summary error:", e); }
+        }
+
+        async function loadHistory() {
+            if (!currentUser) return;
+            const historyList = document.getElementById('history-list');
+            historyList.innerHTML = '<li>Loading...</li>';
+            const chatsRef = collection(db, 'users', currentUser.uid, 'chats');
+            const q = query(chatsRef, orderBy('createdAt', 'desc'));
+            const querySnapshot = await getDocs(q);
+            historyList.innerHTML = '';
+            if (querySnapshot.empty) { historyList.innerHTML = '<li>No past conversations found.</li>'; return; }
+            querySnapshot.forEach(doc => {
+                const chat = doc.data(); 
+                const chatId = doc.id; 
+                const li = document.createElement('li');
+                li.className = 'history-item'; 
+                li.dataset.chatId = chatId;
+                
+                const contentDiv = document.createElement('div');
+                contentDiv.className = 'history-item-content';
+                const date = chat.createdAt?.toDate().toLocaleString() || 'Date unknown';
+                contentDiv.innerHTML = `<span class="history-item-date">${date}</span><p class="history-item-preview">${chat.title || 'Conversation'}</p>`;
+                
+                const deleteBtn = document.createElement('button');
+                deleteBtn.className = 'delete-history-btn';
+                deleteBtn.title = 'Delete Conversation';
+                deleteBtn.innerHTML = '<i class="fas fa-trash-alt"></i>';
+
+                deleteBtn.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    deleteChat(chatId, li);
+                });
+
+                li.appendChild(contentDiv);
+                li.appendChild(deleteBtn);
+                
+                li.addEventListener('click', () => { 
+                    loadChat(chatId); 
+                    togglePanel(historyPanel); 
+                });
+
+                historyList.appendChild(li);
+            });
+        }
+
+        async function deleteChat(chatIdToDelete, listItemElement) {
+            if (!currentUser) return;
+            const confirmation = confirm("Are you sure you want to permanently delete this conversation? This action cannot be undone.");
+            if (!confirmation) return;
+            try {
+                const messagesRef = collection(db, 'users', currentUser.uid, 'chats', chatIdToDelete, 'messages');
+                const messagesSnapshot = await getDocs(messagesRef);
+                const deletePromises = [];
+                messagesSnapshot.forEach((doc) => {
+                    deletePromises.push(deleteDoc(doc.ref));
+                });
+                await Promise.all(deletePromises);
+                const chatDocRef = doc(db, 'users', currentUser.uid, 'chats', chatIdToDelete);
+                await deleteDoc(chatDocRef);
+                listItemElement.remove();
+                if (currentChatId === chatIdToDelete) {
+                    if (unsubscribeMessages) unsubscribeMessages();
+                    currentChatId = null;
+                    messagesContainer.innerHTML = '';
+                    await loadOrCreateChat();
+                }
+                const historyList = document.getElementById('history-list');
+                if (historyList.children.length === 0) {
+                    historyList.innerHTML = '<li>No past conversations found.</li>';
+                }
+            } catch (error) {
+                console.error("Error deleting chat:", error);
+                alert("There was an error deleting the conversation. Please try again.");
+            }
+        }
+
+        function toggleAuthForms(showSignup) {
+            document.getElementById('login-form').style.display = showSignup ? 'none' : 'block';
+            document.getElementById('signup-form').style.display = showSignup ? 'block' : 'none';
+        }
+
+        function togglePanel(panel) {
+            const isOpen = panel.classList.contains('open');
+            settingsPanel.classList.remove('open'); historyPanel.classList.remove('open');
+            if (!isOpen) { panel.classList.add('open'); overlay.classList.add('active'); } 
+            else { overlay.classList.remove('active'); }
+            dropdownMenu.style.display = 'none';
+        }
+
+        function addMessageToUI(sender, text) {
+            const el = document.createElement('div');
+            el.className = `message ${sender}-message`;
+            el.innerHTML = parseMessageContent(text);
+            if (sender === 'lauren') {
+                const actions = document.createElement('div'); actions.className = 'message-actions';
+                
+                const copyBtn = document.createElement('button'); copyBtn.className = 'copy-btn'; copyBtn.title = "Copy"; copyBtn.innerHTML = '<i class="fas fa-copy"></i>';
+                const tooltip = document.createElement('div'); tooltip.className = 'copy-tooltip'; tooltip.textContent = "Copied!";
+                copyBtn.onclick = () => { navigator.clipboard.writeText(text); tooltip.classList.add('show'); setTimeout(() => tooltip.classList.remove('show'), 2000); };
+                
+                const speakBtn = document.createElement('button'); speakBtn.className = 'copy-btn'; speakBtn.title = "Speak"; speakBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+                speakBtn.onclick = () => speakText(text);
+
+                actions.append(speakBtn, copyBtn, tooltip); el.appendChild(actions);
+            }
+            messagesContainer.appendChild(el);
+
+            // Initialize maps if any, with a small timeout to ensure layout is ready
+            el.querySelectorAll('.message-map').forEach(mapDiv => {
+                const location = mapDiv.dataset.location;
+                setTimeout(() => initMap(mapDiv, location), 100);
+            });
+        }
+
+        function parseMessageContent(text) {
+            const rawHtml = marked.parse(text);
+            const cleanHtml = DOMPurify.sanitize(rawHtml);
+            return cleanHtml.replace(/\[IMAGE:(.*?)\]/g, '<img src="$1" alt="Image">')
+                            .replace(/\[GIF:(.*?)\]/g, '<img src="$1" alt="GIF">')
+                            .replace(/\[VIDEO:(.*?)\]/g, '<video src="$1" controls></video>')
+                            .replace(/\[MAP:(.*?)\]/g, '<div class="message-map" data-location="$1"></div>');
+        }
+
+async function initMap(container, location) {
+  const map = L.map(container).setView([0, 0], 2);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: '© OpenStreetMap contributors',
+    maxZoom: 19
+  }).addTo(map);
+
+  if (geocodeCache.has(location)) {
+    console.log(`Using cached location for: ${location}`);
+    const cached = geocodeCache.get(location);
+    map.setView([cached.lat, cached.lon], cached.zoom);
+    L.marker([cached.lat, cached.lon]).addTo(map)
+      .bindPopup(`<strong>${location}</strong><br><em>(from cache)</em>`)
+      .openPopup();
+    return;
+  }
+
+  try {
+    const now = Date.now();
+    const timeSinceLastRequest = now - lastGeocodeTime;
+    if (timeSinceLastRequest < GEOCODE_MIN_INTERVAL) {
+      const waitTime = GEOCODE_MIN_INTERVAL - timeSinceLastRequest;
+      console.log(`Rate limiting: waiting ${waitTime}ms`);
+      await new Promise(resolve => setTimeout(resolve, waitTime));
+    }
+    lastGeocodeTime = Date.now();
+
+    const photonQuery = `https://photon.komoot.io/api/?q=${encodeURIComponent(location)}&limit=5`;
+    const response = await fetch(photonQuery);
+
+    if (!response.ok) {
+      if (response.status === 429) {
+        throw new Error('Rate limit exceeded. Please wait a moment.');
+      }
+      throw new Error(`Geocoding error: ${response.status}`);
+    }
+
+    const data = await response.json();
+
+    if (data && data.features && data.features.length > 0) {
+      const features = data.features.sort((a, b) => {
+        const aScore = (a.properties.osm_key === 'tourism' || a.properties.osm_key === 'amenity' || a.properties.osm_key === 'historic') ? 10 : 0;
+        const bScore = (b.properties.osm_key === 'tourism' || b.properties.osm_key === 'amenity' || b.properties.osm_key === 'historic') ? 10 : 0;
+        return bScore - aScore;
+      });
+
+      const bestMatch = features[0];
+      const coords = bestMatch.geometry.coordinates;
+      const lon = coords[0];
+      const lat = coords[1];
+
+      const osmKey = bestMatch.properties.osm_key;
+      const zoom = ['city', 'county', 'state', 'country'].includes(osmKey) ? 12 : 16;
+
+      map.setView([lat, lon], zoom);
+      L.marker([lat, lon]).addTo(map).bindPopup(location).openPopup();
+      geocodeCache.set(location, { lat, lon, zoom });
+      console.log(`Location cached: ${location}`);
+    } else {
+      L.marker([0, 0]).addTo(map)
+        .bindPopup(`<strong>Location not found</strong><br>Could not find: "${location}"`)
+        .openPopup();
+    }
+  } catch (error) {
+    console.error("Geocoding error:", error);
+    L.marker([0, 0]).addTo(map)
+      .bindPopup(`<strong>Map Error</strong><br>${error.message}<br><em>Please try again later.</em>`)
+      .openPopup();
+    container.style.border = '2px solid #ef4444';
+    setTimeout(() => { container.style.border = ''; }, 3000);
+  }
+}
+
+        function applyFormat(format) {
+            const selection = window.getSelection();
+            if (!selection.rangeCount) return;
+            const range = selection.getRangeAt(0);
+            const selectedText = range.toString();
+            if (!selectedText) { alert("Please select some text in the input box before applying a format."); return; }
+            let formattedText = '';
+            switch (format) {
+                case 'bold': formattedText = `**${selectedText}**`; break;
+                case 'italic': formattedText = `*${selectedText}*`; break;
+                case 'link': const url = prompt('Enter URL:'); if (url) { formattedText = `[${selectedText}](${url})`; } else { return; } break;
+            }
+            range.deleteContents(); range.insertNode(document.createTextNode(formattedText));
+            selection.removeAllRanges();
+        }
+
+        function showTypingIndicator() {
+            if (document.getElementById('typing-indicator')) return;
+            const el = document.createElement('div'); el.id = 'typing-indicator'; el.className = 'typing-indicator';
+            el.innerHTML = `<span></span><span></span><span></span>`;
+            messagesContainer.appendChild(el); scrollToBottom();
+        }
+
+        function removeTypingIndicator() { document.getElementById('typing-indicator')?.remove(); }
+        function scrollToBottom() { messagesContainer.scrollTop = messagesContainer.scrollHeight; }
+        
+        function constructSystemPrompt() {
+            return `You are Marcus Wellington, a seasoned and passionate tour guide with decades of experience traveling the world 🌍. You speak multiple languages fluently and possess encyclopedic knowledge of tourist destinations worldwide. You are also a kind-hearted language coach who helps travelers improve their language skills naturally and encouragingly.
+
+**Expertise & Knowledge**
+- **Global Destinations:** You intimately know must-see attractions and hidden gems in every country and region.
+- **History & Culture:** You share captivating historical anecdotes and deep cultural insights.
+- **Gastronomy:** You are an expert in local cuisine, traditional beverages, and you recommend the best restaurants and establishments.
+- **Accommodation:** You know the best places to stay for all budgets and preferences.
+- **Languages:** You master several languages and naturally help learners improve.
+
+- ** Your process:**
+
+Review: Analyze our entire conversation history to understand my preferences and previous discussions before proposing a new plan.
+
+Propose & Confirm: Suggest a detailed itinerary and ask for my explicit confirmation.
+
+Execute: Once I confirm the plan, you must adhere to it without deviation. Do not suggest changes unless I specifically ask you to.
+
+Always be consistent and faithful to my requests and the confirmed itinerary.
+To manage conversation history and recall confirmed plans without overwhelming the system, use the "Conversation Summarization" strategy.  Instead of feeding the entire chat history back to the model, the system periodically creates a summary of the older parts of the conversation.
+How it works: After a certain number of exchanges, a separate process uses the LLM to summarize the conversation so far. This summary, which is much shorter than the full text, is then used as the context for future turns.
+
+Example:
+
+Full History (Messages 1-10): Detailed discussion about destinations, user preferences for museums, and budget constraints.
+
+Generated Summary: "The user wants a 3-day tour of Paris, focusing on art museums like the Louvre. The budget is moderate, and they prefer walking tours. A plan was proposed and confirmed to visit the Louvre on Day 1, and the Musée d'Orsay on Day 2."
+
+For Message 11: The system uses this summary plus the most recent few messages as context, which is far more efficient.
+
+**Language Correction Method**
+Every time the user speaks, provide constructive language feedback following this exact structure:
+
+[Personal positive and encouraging comment]
+
+✅ **Corrected version:** [The learner's corrected and polished sentence]
+
+💬 **Other natural ways to say the same thing:**
+- [Alternative 1]
+- [Alternative 2]
+📝 **Note:** [Concise explanation if necessary]
+
+**Feedback Principles**
+- Always be kind and encouraging 💚
+- Start with a sincere compliment on what was done well.
+- Correct tactfully and clearly.
+- Suggest authentic and common alternatives.
+- Only add the explanatory note if it's truly useful.
+- Adapt your level of correction to the learner's level.
+
+**Communication Style**
+- Use emojis 😊 to illustrate your explanations and make the conversation lively.
+- Be warm, enthusiastic, and welcoming.
+- Share precise, relevant, and practical information.
+- Tell personal anecdotes to make your advice memorable.
+- Adapt your language to the user's level.
+- Put your questions in bold for better readability 
+- **Maps:** Whenever you mention a specific tourist destination, monument, or hotel, you MUST include a map using this exact format: \`[MAP:Name of the place, City]\`. For example: "I recommend visiting the Eiffel Tower [MAP:Eiffel Tower, Paris]".
+- Do not use table in your responses, instead use bullet points and mark down to highlight the main idea and divisions in your statement. The use of emojis 😊are highly recommended.
+
+**Initial Conversation Structure**
+1. **Welcome & Introduction:** Start by warmly introducing yourself as an experienced tour guide and ask the user which language they feel comfortable using.
+2. **Destination:** Then ask which destination the user wants to explore.
+3. **Conversation Flow:**
+   - Provide detailed information about the destination.
+   - Recommend places, restaurants, accommodations.
+   - Share local history and culture.
+   - Systematically give your language feedback on each user message.
+`;
+        }
+
+        function setupPlaceholder() {
+            const placeholder = 'Type your message... (Markdown supported)';
+            userInput.setAttribute('data-placeholder', placeholder);
+            userInput.onfocus = () => { if (userInput.textContent === placeholder) userInput.textContent = ''; };
+            userInput.onblur = () => { if (userInput.textContent.trim() === '') userInput.textContent = placeholder; };
+            if (userInput.textContent.trim() === '') userInput.textContent = placeholder;
+        }
+
+        init();
+    </script>
+</body>
+</html>
